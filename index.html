@@ -1,1077 +1,326 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator Soal Guru SD - Siap Cetak A4</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&family=Times+New+Roman&display=swap" rel="stylesheet">
-    <style>
-        /* Pengaturan Font Utama UI */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f1f5f9;
-        }
-        
-        /* Font khusus untuk dokumen soal agar terlihat resmi */
-        .doc-font {
-            font-family: 'Times New Roman', Times, serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal Generator dan Bank Soal - SD Negeri Kapuk 01</title>
+  <style>
+    :root {
+      --bg-start: #dbeafe;
+      --bg-mid: #e0e7ff;
+      --bg-end: #ede9fe;
+      --grad-primary: linear-gradient(135deg, #38bdf8 0%, #6366f1 55%, #7c3aed 100%);
+      --grad-btn-left: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+      --grad-btn-right: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      --card-bg: #ffffff;
+      --surface-soft: #f8fafc;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border-soft: #e2e8f0;
+      --accent-indigo: #4f46e5;
+      --shadow-card: 0 12px 30px rgba(79, 70, 229, 0.09);
+      --shadow-hero: 0 14px 32px rgba(99, 102, 241, 0.22);
+    }
 
-        /* Pengaturan Kertas A4 di Layar */
-        .a4-paper {
-            width: 210mm;
-            min-height: 297mm;
-            padding: 15mm 20mm;
-            margin: 0 auto;
-            background: white;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-            box-sizing: border-box;
-            position: relative;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        /* Garis Ganda Khas Kop Surat Resmi Indonesia */
-        .kop-border {
-            border-bottom: 3px solid #000;
-            position: relative;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-        }
-        .kop-border::after {
-            content: '';
-            display: block;
-            border-bottom: 1px solid #000;
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            right: 0;
-        }
+    body {
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(160deg, var(--bg-start) 0%, var(--bg-mid) 50%, var(--bg-end) 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+    }
 
-        /* Pengaturan Khusus Saat Dicetak (Print / Save as PDF) */
-        @media print {
-            body {
-                background: white !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-            .no-print {
-                display: none !important;
-            }
-            .print-container {
-                width: 100% !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                overflow: visible !important;
-            }
-            .a4-paper {
-                width: 100% !important;
-                min-height: auto !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                box-shadow: none !important;
-                border: none !important;
-            }
-            @page {
-                size: A4 portrait;
-                margin: 15mm 18mm 15mm 18mm;
-            }
-            .page-break {
-                page-break-before: always;
-            }
-            /* Mencegah satu nomor soal terpotong di tengah halaman */
-            .soal-item {
-                break-inside: avoid;
-                page-break-inside: avoid;
-            }
-        }
+    .container {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 20px 40px;
+      flex: 1;
+    }
 
-        /* Custom Scrollbar untuk Panel Editor */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-    </style>
+    /* Header Banner */
+    .hero-banner {
+      background: var(--grad-primary);
+      border-radius: 20px;
+      padding: 24px 28px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      box-shadow: var(--shadow-hero);
+      margin-bottom: 24px;
+    }
+
+    .logo-box {
+      width: 92px;
+      height: 92px;
+      min-width: 92px;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.18);
+      overflow: hidden;
+    }
+
+    .logo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .hero-text {
+      flex: 1;
+    }
+
+    .hero-title {
+      font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      line-height: 1.25;
+      color: #ffffff;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+      font-weight: 500;
+      color: #f1f5f9;
+    }
+
+    /* Main Content Card */
+    .main-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 28px 30px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .welcome-heading {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e1b4b;
+      margin-bottom: 10px;
+    }
+
+    .welcome-desc {
+      color: var(--text-muted);
+      font-size: 0.98rem;
+      margin-bottom: 22px;
+    }
+
+    /* Panduan Alur */
+    .guide-box {
+      background: var(--surface-soft);
+      border: 1px solid var(--border-soft);
+      border-left: 4px solid var(--accent-indigo);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 26px;
+    }
+
+    .guide-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1e1b4b;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .guide-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .guide-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.95rem;
+      color: #334155;
+    }
+
+    .step-badge {
+      background: var(--grad-btn-right);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.82rem;
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    /* Tombol Akses Cepat Bersebelahan */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .btn-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.96rem;
+      padding: 15px 18px;
+      border-radius: 14px;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+
+    .btn-drive {
+      background: var(--grad-btn-left);
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.24);
+    }
+
+    .btn-app {
+      background: var(--grad-btn-right);
+      box-shadow: 0 8px 18px rgba(124, 58, 237, 0.24);
+    }
+
+    .btn-action:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.04);
+    }
+
+    /* Footer Resmi */
+    .site-footer {
+      background: var(--grad-primary);
+      color: #ffffff;
+      text-align: center;
+      padding: 16px 20px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    @media (max-width: 680px) {
+      .hero-banner {
+        flex-direction: column;
+        text-align: center;
+        padding: 22px 18px;
+      }
+
+      .main-card {
+        padding: 22px 18px;
+      }
+
+      .quick-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-<body class="text-slate-800 antialiased">
-
-    <!-- Navbar / Header Aplikasi (Tidak ikut tercetak) -->
-    <header class="no-print bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                </div>
-                <div>
-                    <h1 class="font-bold text-slate-900 text-base sm:text-lg leading-tight">Generator Soal SD</h1>
-                    <p class="text-xs text-slate-500 hidden sm:block">Pembuat Naskah Ujian & Lembar Kerja Siap Cetak A4</p>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-2 sm:gap-3">
-                <!-- Toggle Kunci Jawaban -->
-                <label class="flex items-center gap-2 text-xs sm:text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-lg cursor-pointer transition">
-                    <input type="checkbox" id="toggleKunci" class="rounded text-blue-600 focus:ring-blue-500 w-4 h-4" onchange="renderPreview()">
-                    <span>Tampilkan Kunci Jawaban</span>
-                </label>
-
-                <!-- Tombol Reset / Simpan -->
-                <button onclick="saveToLocal()" class="hidden md:flex items-center gap-1.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 px-3 py-2 rounded-lg transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                    </svg>
-                    <span>Simpan Data</span>
-                </button>
-
-                <!-- Tombol Cetak / PDF -->
-                <button onclick="window.print()" class="flex items-center gap-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg shadow-sm transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                    </svg>
-                    <span>Cetak / PDF A4</span>
-                </button>
-            </div>
-        </div>
+<body>
+  <main class="container">
+    <header class="hero-banner">
+      <div class="logo-box">
+        <img
+          id="logoSekolah"
+          src="https://lh3.googleusercontent.com/d/1iKzX1bGA3yg9tJcyfULsB1M-7YNjs8uC"
+          alt="Logo SD Negeri Kapuk 01"
+          data-fallback-1="https://drive.google.com/thumbnail?id=1iKzX1bGA3yg9tJcyfULsB1M-7YNjs8uC&sz=w400"
+          data-fallback-2="https://drive.google.com/uc?export=view&id=1iKzX1bGA3yg9tJcyfULsB1M-7YNjs8uC"
+          onerror="handleLogoFallback(this)"
+        />
+      </div>
+      <div class="hero-text">
+        <h1 class="hero-title">PORTAL GENERATOR DAN BANK SOAL</h1>
+        <p class="hero-subtitle">Digitalisasi Administrasi Kependidikan - SD Negeri Kapuk 01</p>
+      </div>
     </header>
 
-    <!-- Notifikasi Toast (Pengganti alert) -->
-    <div id="toast" class="no-print fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 text-sm">
-        <span id="toastIcon">✅</span>
-        <span id="toastMessage">Perubahan berhasil disimpan!</span>
-    </div>
-
-    <!-- Main Layout: Kiri (Panel Kontrol) & Kanan (Live Preview A4) -->
-    <main class="max-w-screen-2xl mx-auto flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
-        
-        <!-- PANEL KIRI: EDITOR & GENERATOR (Tidak ikut tercetak) -->
-        <aside class="no-print w-full lg:w-[460px] xl:w-[500px] bg-white border-r border-slate-200 flex-shrink-0 lg:h-[calc(100vh-4rem)] lg:overflow-y-auto">
-            
-            <!-- Navigasi Tab Editor -->
-            <div class="grid grid-cols-3 border-b border-slate-200 bg-slate-50 sticky top-0 z-20">
-                <button onclick="switchTab('tab-ai')" id="btn-tab-ai" class="tab-btn py-3 text-xs sm:text-sm font-semibold border-b-2 border-blue-600 text-blue-600 bg-white flex items-center justify-center gap-1.5">
-                    <span>✨ Buat Otomatis (AI)</span>
-                </button>
-                <button onclick="switchTab('tab-kop')" id="btn-tab-kop" class="tab-btn py-3 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5">
-                    <span>🏫 Kop & Identitas</span>
-                </button>
-                <button onclick="switchTab('tab-soal')" id="btn-tab-soal" class="tab-btn py-3 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5">
-                    <span>📝 Edit Soal (<span id="soalCountBadge">0</span>)</span>
-                </button>
-            </div>
-
-            <div class="p-5 space-y-6">
-
-                <!-- TAB 1: GENERATOR SOAL OTOMATIS DENGAN AI -->
-                <div id="tab-ai" class="tab-content space-y-4">
-                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
-                        <h2 class="text-sm font-bold text-blue-900 flex items-center gap-2">
-                            <span>✨ Asisten Pembuat Soal SD (AI)</span>
-                        </h2>
-                        <p class="text-xs text-blue-700 mt-1 leading-relaxed">
-                            Masukkan materi pelajaran, kelas, dan jumlah soal yang diinginkan. Sistem akan menyusun soal dengan bahasa yang sesuai usia siswa SD beserta kunci jawabannya.
-                        </p>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Kelas / Fase</label>
-                            <select id="aiKelas" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" onchange="syncIdentitasFromAI()">
-                                <option value="1 (Satu) / Fase A">Kelas 1 (Fase A)</option>
-                                <option value="2 (Dua) / Fase A">Kelas 2 (Fase A)</option>
-                                <option value="3 (Tiga) / Fase B">Kelas 3 (Fase B)</option>
-                                <option value="4 (Empat) / Fase B" selected>Kelas 4 (Fase B)</option>
-                                <option value="5 (Lima) / Fase C">Kelas 5 (Fase C)</option>
-                                <option value="6 (Enam) / Fase C">Kelas 6 (Fase C)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Mata Pelajaran</label>
-                            <select id="aiMapel" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" onchange="syncIdentitasFromAI()">
-                                <option value="IPAS (Ilmu Pengetahuan Alam dan Sosial)">IPAS</option>
-                                <option value="Matematika">Matematika</option>
-                                <option value="Bahasa Indonesia">Bahasa Indonesia</option>
-                                <option value="Pendidikan Pancasila">Pendidikan Pancasila</option>
-                                <option value="Seni Budaya dan Prakarya (SBdP)">Seni Budaya (SBdP)</option>
-                                <option value="PJOK">PJOK</option>
-                                <option value="Bahasa Inggris">Bahasa Inggris</option>
-                                <option value="Pendidikan Agama Islam">Pendidikan Agama</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Topik / Materi / Capaian Pembelajaran (CP)</label>
-                        <textarea id="aiMateri" rows="3" placeholder="Contoh: Siklus air dan manfaatnya bagi kehidupan sehari-hari, atau Pecahan senilai dan membandingkan pecahan..." class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">Wujud Zat dan Perubahannya (Mencair, Membeku, Menguap, Mengembun)</textarea>
-                    </div>
-
-                    <div class="grid grid-cols-3 gap-2">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Jml. Pil. Ganda</label>
-                            <input type="number" id="aiJmlPG" value="5" min="0" max="25" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Jml. Isian</label>
-                            <input type="number" id="aiJmlIsian" value="3" min="0" max="15" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Jml. Uraian</label>
-                            <input type="number" id="aiJmlUraian" value="2" min="0" max="10" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Opsi Pilihan Ganda</label>
-                            <select id="aiOpsiCount" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none" onchange="renderPreview()">
-                                <option value="3">A, B, C (Untuk Kelas 1-3)</option>
-                                <option value="4" selected>A, B, C, D (Untuk Kelas 4-6)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Tingkat Kesulitan</label>
-                            <select id="aiLevel" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none">
-                                <option value="Mudah (LOTS - Pemahaman Dasar)">Mudah (LOTS)</option>
-                                <option value="Sedang (Campuran Pemahaman & Penerapan)" selected>Sedang (Standar)</option>
-                                <option value="HOTS (Penalaran & Analisis Cerita)">HOTS (Penalaran)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="pt-2">
-                        <button id="btnGenerateAI" onclick="generateSoalWithAI()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
-                            </svg>
-                            <span>Buat Soal Sekarang</span>
-                        </button>
-                    </div>
-
-                    <!-- Indikator Loading AI -->
-                    <div id="aiLoading" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-4 text-center space-y-2">
-                        <div class="inline-block animate-spin rounded-full h-6 w-6 border-2 border-blue-600 border-t-transparent"></div>
-                        <p class="text-xs font-medium text-slate-700">Sedang menyusun naskah soal SD & kunci jawaban...</p>
-                    </div>
-                </div>
-
-                <!-- TAB 2: KOP SEKOLAH & IDENTITAS UJIAN -->
-                <div id="tab-kop" class="tab-content hidden space-y-4">
-                    <div class="border-b border-slate-200 pb-2">
-                        <h3 class="text-sm font-bold text-slate-800">Pengaturan Kop Surat Sekolah</h3>
-                        <p class="text-xs text-slate-500">Sesuaikan dengan format resmi dinas pendidikan setempat.</p>
-                    </div>
-
-                    <!-- Logo Sekolah Upload -->
-                    <div class="grid grid-cols-2 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Logo Pemda / Dinas (Kiri)</label>
-                            <input type="file" accept="image/*" onchange="handleLogoUpload(event, 'left')" class="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 w-full">
-                            <button onclick="removeLogo('left')" class="text-[11px] text-red-500 hover:underline mt-1">Hapus logo kiri</button>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Logo Sekolah / Tut Wuri (Kanan)</label>
-                            <input type="file" accept="image/*" onchange="handleLogoUpload(event, 'right')" class="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 w-full">
-                            <button onclick="removeLogo('right')" class="text-[11px] text-red-500 hover:underline mt-1">Hapus logo kanan</button>
-                        </div>
-                    </div>
-
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Baris 1 (Pemerintah Daerah)</label>
-                            <input type="text" id="kopPemda" value="PEMERINTAH KABUPATEN / KOTA NUSANTARA" oninput="renderPreview()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Baris 2 (Dinas Pendidikan)</label>
-                            <input type="text" id="kopDinas" value="DINAS PENDIDIKAN DAN KEBUDAYAAN" oninput="renderPreview()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Baris 3 (Nama Sekolah - Tebal & Besar)</label>
-                            <input type="text" id="kopSekolah" value="SD NEGERI 01 HARAPAN BANGSA" oninput="renderPreview()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-bold">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Baris 4 (Alamat, Kode Pos, Email/NPSN)</label>
-                            <input type="text" id="kopAlamat" value="Jl. Pendidikan No. 45, Kec. Merdeka, Telp. (021) 555-0192 | NPSN: 20109988" oninput="renderPreview()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm">
-                        </div>
-                    </div>
-
-                    <div class="border-b border-slate-200 pb-2 pt-2">
-                        <h3 class="text-sm font-bold text-slate-800">Judul & Identitas Naskah Soal</h3>
-                    </div>
-
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Judul Penilaian / Ujian</label>
-                            <input type="text" id="judulUjian" value="SUMATIF TENGAH SEMESTER (STS) GANJIL" oninput="renderPreview()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm">
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Tahun Pelajaran</label>
-                                <input type="text" id="tahunAjaran" value="2026 / 2027" oninput="renderPreview()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Alokasi Waktu</label>
-                                <input type="text" id="waktuUjian" value="90 Menit" oninput="renderPreview()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm">
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Mata Pelajaran</label>
-                                <input type="text" id="idMapel" value="IPAS (Ilmu Pengetahuan Alam dan Sosial)" oninput="renderPreview()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Kelas / Semester</label>
-                                <input type="text" id="idKelas" value="IV (Empat) / I (Ganjil)" oninput="renderPreview()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Hari / Tanggal</label>
-                            <input type="text" id="hariTanggal" value="Senin, 23 November 2026" oninput="renderPreview()" class="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm">
-                        </div>
-                        <div class="flex items-center gap-2 pt-1">
-                            <input type="checkbox" id="showKotakNilai" checked onchange="renderPreview()" class="rounded text-blue-600 w-4 h-4">
-                            <label for="showKotakNilai" class="text-xs font-medium text-slate-700">Sertakan Kolom Nama Siswa, No. Absen & Kotak Nilai</label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB 3: EDIT MANUAL & TAMBAH SOAL -->
-                <div id="tab-soal" class="tab-content hidden space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-200 pb-2">
-                        <div>
-                            <h3 class="text-sm font-bold text-slate-800">Daftar Butir Soal</h3>
-                            <p class="text-xs text-slate-500">Edit teks soal, pilihan, atau tambah soal baru secara manual.</p>
-                        </div>
-                        <button onclick="clearAllQuestions()" class="text-xs text-red-600 hover:bg-red-50 px-2 py-1 rounded font-medium">Kosongkan</button>
-                    </div>
-
-                    <!-- Tombol Tambah Soal Manual -->
-                    <div class="grid grid-cols-3 gap-2">
-                        <button onclick="addQuestion('pg')" class="bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-xs font-semibold py-2 px-2 rounded-lg transition">
-                            + Pil. Ganda
-                        </button>
-                        <button onclick="addQuestion('isian')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-semibold py-2 px-2 rounded-lg transition">
-                            + Isian Singkat
-                        </button>
-                        <button onclick="addQuestion('uraian')" class="bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 text-xs font-semibold py-2 px-2 rounded-lg transition">
-                            + Uraian / Esai
-                        </button>
-                    </div>
-
-                    <!-- Container List Form Soal -->
-                    <div id="editorSoalList" class="space-y-4">
-                        <!-- Diisi oleh JavaScript -->
-                    </div>
-                </div>
-
-            </div>
-        </aside>
-
-        <!-- PANEL KANAN: PRATINJAU KERTAS A4 SIAP CETAK -->
-        <section class="print-container flex-1 p-4 sm:p-8 overflow-x-auto bg-slate-200/80 flex flex-col items-center">
-            
-            <!-- Info Ukuran Kertas -->
-            <div class="no-print w-full max-w-[210mm] flex items-center justify-between mb-3 text-xs text-slate-600">
-                <span class="font-medium flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    Pratinjau Kertas Standar A4 (210mm x 297mm)
-                </span>
-                <span>Tips: Pilih <b>"Save as PDF"</b> atau <b>"Simpan sebagai PDF"</b> pada menu cetak untuk mengunduh file.</span>
-            </div>
-
-            <!-- LEMBAR KERTAS A4 -->
-            <div id="a4Document" class="a4-paper doc-font text-black text-[11.5pt] leading-normal">
-                <!-- Konten Naskah Soal Dirender Secara Dinamis di Sini -->
-            </div>
-
-        </section>
-    </main>
-
-    <script>
-        // State Aplikasi
-        let appState = {
-            logoLeft: null,
-            logoRight: null,
-            questions: [
-                {
-                    id: 1,
-                    type: 'pg',
-                    question: 'Perubahan wujud benda dari padat menjadi cair karena terkena panas disebut ....',
-                    options: ['membeku', 'mencair', 'menguap', 'mengembun'],
-                    answer: 'B'
-                },
-                {
-                    id: 2,
-                    type: 'pg',
-                    question: 'Es batu yang diletakkan di ruang terbuka lama-kelamaan akan berubah menjadi ....',
-                    options: ['gas', 'uap', 'air', 'asap'],
-                    answer: 'C'
-                },
-                {
-                    id: 3,
-                    type: 'pg',
-                    question: 'Contoh peristiwa mengembun dalam kehidupan sehari-hari adalah ....',
-                    options: [
-                        'air yang dimasak hingga mendidih',
-                        'kapur barus di lemari yang mengecil',
-                        'titik-titik air di luar gelas berisi es',
-                        'lilin yang meleleh saat dibakar'
-                    ],
-                    answer: 'C'
-                },
-                {
-                    id: 4,
-                    type: 'isian',
-                    question: 'Air yang dimasukkan ke dalam freezer kulkas akan mengalami perubahan wujud menjadi ....',
-                    answer: 'es / benda padat (membeku)'
-                },
-                {
-                    id: 5,
-                    type: 'isian',
-                    question: 'Baju basah yang dijemur di bawah terik matahari menjadi kering karena mengalami peristiwa ....',
-                    answer: 'penguapan (menguap)'
-                },
-                {
-                    id: 6,
-                    type: 'uraian',
-                    question: 'Sebutkan 3 contoh benda padat yang ada di ruang kelasmu!',
-                    answer: 'Meja, kursi, papan tulis, buku, penghapus (kebijaksanaan guru).'
-                },
-                {
-                    id: 7,
-                    type: 'uraian',
-                    question: 'Jelaskan mengapa mentega yang dipanaskan di atas wajan bisa meleleh!',
-                    answer: 'Karena mentega menerima energi panas (kalor) dari api kompor sehingga wujudnya berubah dari padat menjadi cair (mencair).'
-                }
-            ]
-        };
-
-        // Inisialisasi saat halaman dimuat
-        window.onload = function() {
-            loadFromLocal();
-            renderEditorList();
-            renderPreview();
-        };
-
-        // Fungsi Navigasi Tab
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(tabId).classList.remove('hidden');
-
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('border-blue-600', 'text-blue-600', 'bg-white', 'font-semibold');
-                btn.classList.add('border-transparent', 'text-slate-600', 'font-medium');
-            });
-
-            const activeBtn = document.getElementById('btn-' + tabId);
-            activeBtn.classList.remove('border-transparent', 'text-slate-600', 'font-medium');
-            activeBtn.classList.add('border-blue-600', 'text-blue-600', 'bg-white', 'font-semibold');
-        }
-
-        // Sinkronisasi Pilihan Kelas & Mapel dari Tab AI ke Tab Identitas
-        function syncIdentitasFromAI() {
-            const kelasVal = document.getElementById('aiKelas').value.split('/')[0].trim();
-            const mapelVal = document.getElementById('aiMapel').value;
-            document.getElementById('idKelas').value = kelasVal + ' / I (Ganjil)';
-            document.getElementById('idMapel').value = mapelVal;
-            
-            // Otomatis sesuaikan jumlah opsi PG berdasarkan kelas (Kelas 1-3 biasanya A,B,C; Kelas 4-6 A,B,C,D)
-            if (kelasVal.startsWith('1') || kelasVal.startsWith('2') || kelasVal.startsWith('3')) {
-                document.getElementById('aiOpsiCount').value = '3';
-            } else {
-                document.getElementById('aiOpsiCount').value = '4';
-            }
-            renderPreview();
-        }
-
-        // Upload Logo Kop Sekolah
-        function handleLogoUpload(event, side) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                if (side === 'left') appState.logoLeft = e.target.result;
-                if (side === 'right') appState.logoRight = e.target.result;
-                renderPreview();
-                showToast('Logo berhasil dipasang pada kop sekolah');
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function removeLogo(side) {
-            if (side === 'left') appState.logoLeft = null;
-            if (side === 'right') appState.logoRight = null;
-            renderPreview();
-        }
-
-        // SVG Default Tut Wuri Handayani Sederhana (Jika belum upload logo)
-        function getDefaultLogoSVG(type) {
-            if (type === 'left') {
-                return `<div class="w-16 h-16 border border-dashed border-slate-300 rounded flex items-center justify-center text-[8pt] text-slate-400 text-center leading-tight p-1 font-sans no-print">Logo Pemda</div>`;
-            }
-            return `<div class="w-16 h-16 border border-dashed border-slate-300 rounded flex items-center justify-center text-[8pt] text-slate-400 text-center leading-tight p-1 font-sans no-print">Logo Sekolah</div>`;
-        }
-
-        // Render Pratinjau Dokumen A4
-        function renderPreview() {
-            const doc = document.getElementById('a4Document');
-            const showKunci = document.getElementById('toggleKunci').checked;
-            const opsiCount = parseInt(document.getElementById('aiOpsiCount').value) || 4;
-            const showKotakNilai = document.getElementById('showKotakNilai').checked;
-
-            // Ambil data Kop & Identitas
-            const pemda = document.getElementById('kopPemda').value;
-            const dinas = document.getElementById('kopDinas').value;
-            const sekolah = document.getElementById('kopSekolah').value;
-            const alamat = document.getElementById('kopAlamat').value;
-            const judul = document.getElementById('judulUjian').value;
-            const tahun = document.getElementById('tahunAjaran').value;
-            const mapel = document.getElementById('idMapel').value;
-            const kelas = document.getElementById('idKelas').value;
-            const hari = document.getElementById('hariTanggal').value;
-            const waktu = document.getElementById('waktuUjian').value;
-
-            // Pisahkan soal berdasarkan kategori
-            const pgList = appState.questions.filter(q => q.type === 'pg');
-            const isianList = appState.questions.filter(q => q.type === 'isian');
-            const uraianList = appState.questions.filter(q => q.type === 'uraian');
-
-            let html = `
-                <!-- KOP SURAT SEKOLAH -->
-                <div class="kop-border flex items-center justify-between gap-3">
-                    <div class="w-20 flex-shrink-0 flex justify-center">
-                        ${appState.logoLeft ? `<img src="${appState.logoLeft}" class="h-16 w-auto object-contain" alt="Logo Kiri">` : getDefaultLogoSVG('left')}
-                    </div>
-                    <div class="flex-1 text-center leading-snug">
-                        <div class="text-[11pt] font-bold uppercase tracking-wide">${escapeHTML(pemda)}</div>
-                        <div class="text-[12pt] font-bold uppercase tracking-wide">${escapeHTML(dinas)}</div>
-                        <div class="text-[15pt] font-bold uppercase tracking-wider mt-0.5">${escapeHTML(sekolah)}</div>
-                        <div class="text-[9.5pt] italic mt-0.5">${escapeHTML(alamat)}</div>
-                    </div>
-                    <div class="w-20 flex-shrink-0 flex justify-center">
-                        ${appState.logoRight ? `<img src="${appState.logoRight}" class="h-16 w-auto object-contain" alt="Logo Kanan">` : getDefaultLogoSVG('right')}
-                    </div>
-                </div>
-
-                <!-- JUDUL UJIAN -->
-                <div class="text-center mt-4 mb-3">
-                    <div class="font-bold text-[12pt] uppercase underline">${escapeHTML(judul)}</div>
-                    <div class="font-bold text-[11pt] uppercase">TAHUN PELAJARAN ${escapeHTML(tahun)}</div>
-                </div>
-
-                <!-- TABEL IDENTITAS UJIAN & SISWA -->
-                <table class="w-full text-[10.5pt] border-collapse border border-black mb-4">
-                    <tr>
-                        <td class="border border-black px-2 py-1 w-[18%] font-bold">Mata Pelajaran</td>
-                        <td class="border border-black px-2 py-1 w-[34%]">: ${escapeHTML(mapel)}</td>
-                        <td class="border border-black px-2 py-1 w-[16%] font-bold">Hari / Tanggal</td>
-                        <td class="border border-black px-2 py-1 w-[32%]">: ${escapeHTML(hari)}</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-black px-2 py-1 font-bold">Kelas / Semester</td>
-                        <td class="border border-black px-2 py-1">: ${escapeHTML(kelas)}</td>
-                        <td class="border border-black px-2 py-1 font-bold">Waktu</td>
-                        <td class="border border-black px-2 py-1">: ${escapeHTML(waktu)}</td>
-                    </tr>
-                    ${showKotakNilai ? `
-                    <tr>
-                        <td class="border border-black px-2 py-1.5 font-bold">Nama Siswa</td>
-                        <td class="border border-black px-2 py-1.5">: ..................................................</td>
-                        <td class="border border-black px-2 py-1.5 font-bold">No. Absen / Nilai</td>
-                        <td class="border border-black px-2 py-1.5">: .......... / ................</td>
-                    </tr>
-                    ` : ''}
-                </table>
-
-                <!-- PETUNJUK UMUM -->
-                <div class="text-[10pt] mb-4 bg-slate-50/50 print:bg-transparent p-2 border border-black/40 rounded-sm">
-                    <span class="font-bold">Petunjuk Umum:</span>
-                    <ol class="list-decimal list-inside ml-1 space-y-0.5">
-                        <li>Berdoalah terlebih dahulu sebelum mengerjakan soal!</li>
-                        <li>Tulislah nama dan nomor absenmu pada kolom yang telah disediakan!</li>
-                        <li>Bacalah setiap soal dengan teliti sebelum menjawab!</li>
-                        <li>Periksalah kembali pekerjaanmu sebelum diserahkan kepada Bapak/Ibu Guru!</li>
-                    </ol>
-                </div>
-            `;
-
-            // BAGIAN I: PILIHAN GANDA
-            let sectionRomawi = ['I', 'II', 'III'];
-            let secIdx = 0;
-
-            if (pgList.length > 0) {
-                const hurufOpsi = opsiCount === 3 ? ['a', 'b', 'c'] : ['a', 'b', 'c', 'd'];
-                const labelHuruf = opsiCount === 3 ? 'a, b, atau c' : 'a, b, c, atau d';
-                
-                html += `
-                    <div class="mb-5">
-                        <div class="font-bold text-[11pt] mb-2">
-                            ${sectionRomawi[secIdx++]}. Berilah tanda silang (X) pada huruf ${labelHuruf} di depan jawaban yang paling benar!
-                        </div>
-                        <div class="space-y-3">
-                `;
-
-                pgList.forEach((item, index) => {
-                    // Cek panjang opsi untuk menentukan layout 1 kolom atau 2 kolom agar hemat kertas
-                    const maxOptLen = Math.max(...(item.options || []).slice(0, opsiCount).map(o => o.length));
-                    const gridClass = maxOptLen < 24 ? 'grid-cols-2' : 'grid-cols-1';
-
-                    html += `
-                        <div class="soal-item flex items-start gap-2">
-                            <div class="w-6 flex-shrink-0 text-right font-normal">${index + 1}.</div>
-                            <div class="flex-1">
-                                <div class="mb-1 text-justify">${escapeHTML(item.question)}</div>
-                                <div class="grid ${gridClass} gap-x-4 gap-y-0.5 pl-1">
-                                    ${hurufOpsi.map((h, i) => {
-                                        const optText = (item.options && item.options[i]) ? item.options[i] : '';
-                                        const isCorrect = showKunci && item.answer && item.answer.toUpperCase() === h.toUpperCase();
-                                        return `
-                                            <div class="flex items-start gap-1.5 ${isCorrect ? 'font-bold underline bg-yellow-100 print:bg-transparent px-1 rounded' : ''}">
-                                                <span class="w-4 flex-shrink-0">${h}.</span>
-                                                <span>${escapeHTML(optText)}</span>
-                                            </div>
-                                        `;
-                                    }).join('')}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                html += `</div></div>`;
-            }
-
-            // BAGIAN II: ISIAN SINGKAT
-            if (isianList.length > 0) {
-                html += `
-                    <div class="mb-5">
-                        <div class="font-bold text-[11pt] mb-2">
-                            ${sectionRomawi[secIdx++]}. Isilah titik-titik di bawah ini dengan jawaban yang tepat!
-                        </div>
-                        <div class="space-y-2.5">
-                `;
-
-                isianList.forEach((item, index) => {
-                    html += `
-                        <div class="soal-item flex items-start gap-2">
-                            <div class="w-6 flex-shrink-0 text-right">${index + 1}.</div>
-                            <div class="flex-1">
-                                <div class="text-justify">${escapeHTML(item.question)}</div>
-                                ${showKunci ? `<div class="text-[10pt] font-bold text-emerald-800 print:text-black mt-0.5">[Kunci: ${escapeHTML(item.answer)}]</div>` : ''}
-                            </div>
-                        </div>
-                    `;
-                });
-
-                html += `</div></div>`;
-            }
-
-            // BAGIAN III: URAIAN
-            if (uraianList.length > 0) {
-                html += `
-                    <div class="mb-4">
-                        <div class="font-bold text-[11pt] mb-2">
-                            ${sectionRomawi[secIdx++]}. Jawablah pertanyaan-pertanyaan di bawah ini dengan jelas dan benar!
-                        </div>
-                        <div class="space-y-4">
-                `;
-
-                uraianList.forEach((item, index) => {
-                    html += `
-                        <div class="soal-item flex items-start gap-2">
-                            <div class="w-6 flex-shrink-0 text-right">${index + 1}.</div>
-                            <div class="flex-1">
-                                <div class="text-justify">${escapeHTML(item.question)}</div>
-                                ${showKunci 
-                                    ? `<div class="text-[10pt] font-bold text-emerald-800 print:text-black mt-1">[Kunci: ${escapeHTML(item.answer)}]</div>` 
-                                    : `<div class="mt-2 space-y-2.5 opacity-60">
-                                        <div class="border-b border-dotted border-black h-4"></div>
-                                        <div class="border-b border-dotted border-black h-4"></div>
-                                       </div>`
-                                }
-                            </div>
-                        </div>
-                    `;
-                });
-
-                html += `</div></div>`;
-            }
-
-            // LEMBAR KUNCI JAWABAN TERPISAH (Jika mode kunci jawaban diaktifkan)
-            if (showKunci && appState.questions.length > 0) {
-                html += `
-                    <div class="page-break pt-6 mt-8 border-t-2 border-dashed border-slate-400 print:border-none">
-                        <div class="text-center font-bold text-[12pt] uppercase underline mb-4">
-                            KUNCI JAWABAN & PEDOMAN PENSKORAN<br>
-                            <span class="text-[10.5pt] no-underline font-normal">${escapeHTML(mapel)} - Kelas ${escapeHTML(kelas)}</span>
-                        </div>
-                `;
-
-                let kSec = 0;
-                if (pgList.length > 0) {
-                    html += `<div class="mb-3"><div class="font-bold mb-1">${sectionRomawi[kSec++]}. Pilihan Ganda</div><div class="grid grid-cols-5 gap-2 text-[10.5pt]">`;
-                    pgList.forEach((q, idx) => {
-                        html += `<div>${idx + 1}. <b>${escapeHTML(q.answer || '-')}</b></div>`;
-                    });
-                    html += `</div></div>`;
-                }
-
-                if (isianList.length > 0) {
-                    html += `<div class="mb-3"><div class="font-bold mb-1">${sectionRomawi[kSec++]}. Isian Singkat</div><ol class="list-decimal list-inside space-y-1 text-[10.5pt]">`;
-                    isianList.forEach(q => {
-                        html += `<li>${escapeHTML(q.answer || '-')}</li>`;
-                    });
-                    html += `</ol></div>`;
-                }
-
-                if (uraianList.length > 0) {
-                    html += `<div class="mb-3"><div class="font-bold mb-1">${sectionRomawi[kSec++]}. Uraian</div><ol class="list-decimal list-inside space-y-1 text-[10.5pt]">`;
-                    uraianList.forEach(q => {
-                        html += `<li>${escapeHTML(q.answer || '-')}</li>`;
-                    });
-                    html += `</ol></div>`;
-                }
-
-                html += `</div>`;
-            }
-
-            if (appState.questions.length === 0) {
-                html += `
-                    <div class="text-center py-16 text-slate-400 font-sans">
-                        <p class="text-base font-medium">Belum ada soal yang dibuat.</p>
-                        <p class="text-xs mt-1">Gunakan tab "Buat Otomatis (AI)" atau tambah soal manual di panel sebelah kiri.</p>
-                    </div>
-                `;
-            }
-
-            doc.innerHTML = html;
-            document.getElementById('soalCountBadge').innerText = appState.questions.length;
-        }
-
-        // Render Daftar Form Edit Soal di Panel Kiri
-        function renderEditorList() {
-            const container = document.getElementById('editorSoalList');
-            const opsiCount = parseInt(document.getElementById('aiOpsiCount').value) || 4;
-            const huruf = opsiCount === 3 ? ['A', 'B', 'C'] : ['A', 'B', 'C', 'D'];
-
-            if (appState.questions.length === 0) {
-                container.innerHTML = `<div class="text-center py-8 text-xs text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-300">Daftar soal kosong. Silakan tambah soal di atas.</div>`;
-                return;
-            }
-
-            container.innerHTML = appState.questions.map((q, idx) => {
-                const badgeColor = q.type === 'pg' ? 'bg-blue-100 text-blue-800' : (q.type === 'isian' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800');
-                const typeLabel = q.type === 'pg' ? 'Pilihan Ganda' : (q.type === 'isian' ? 'Isian Singkat' : 'Uraian');
-
-                let optionsHTML = '';
-                if (q.type === 'pg') {
-                    optionsHTML = `
-                        <div class="space-y-1.5 mt-2 pl-2 border-l-2 border-blue-200">
-                            ${huruf.map((h, optIdx) => `
-                                <div class="flex items-center gap-2">
-                                    <input type="radio" name="ans_${q.id}" value="${h}" ${q.answer === h ? 'checked' : ''} onchange="updateQuestion(${q.id}, 'answer', '${h}')" title="Tandai sebagai kunci jawaban" class="text-blue-600">
-                                    <span class="text-xs font-bold w-4">${h}.</span>
-                                    <input type="text" value="${escapeAttr(q.options[optIdx] || '')}" oninput="updateOption(${q.id}, ${optIdx}, this.value)" class="flex-1 text-xs border border-slate-200 rounded px-2 py-1 focus:border-blue-500 outline-none" placeholder="Teks pilihan ${h}">
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                } else {
-                    optionsHTML = `
-                        <div class="mt-2">
-                            <label class="block text-[11px] font-semibold text-emerald-700 mb-0.5">Kunci Jawaban:</label>
-                            <input type="text" value="${escapeAttr(q.answer || '')}" oninput="updateQuestion(${q.id}, 'answer', this.value)" class="w-full text-xs border border-emerald-200 bg-emerald-50/40 rounded px-2 py-1.5 focus:border-emerald-500 outline-none" placeholder="Masukkan kunci jawaban...">
-                        </div>
-                    `;
-                }
-
-                return `
-                    <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-sm hover:border-slate-300 transition">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-[11px] font-bold px-2 py-0.5 rounded-md ${badgeColor}">#${idx + 1} • ${typeLabel}</span>
-                            <div class="flex items-center gap-1">
-                                <button onclick="moveQuestion(${idx}, -1)" class="p-1 text-slate-400 hover:text-slate-700" title="Geser ke atas">↑</button>
-                                <button onclick="moveQuestion(${idx}, 1)" class="p-1 text-slate-400 hover:text-slate-700" title="Geser ke bawah">↓</button>
-                                <button onclick="deleteQuestion(${q.id})" class="p-1 text-red-400 hover:text-red-600 text-xs font-semibold ml-1" title="Hapus soal">✕</button>
-                            </div>
-                        </div>
-                        <textarea rows="2" oninput="updateQuestion(${q.id}, 'question', this.value)" class="w-full text-xs border border-slate-300 rounded-lg p-2 focus:ring-1 focus:ring-blue-500 outline-none" placeholder="Tulis pertanyaan di sini...">${escapeHTML(q.question)}</textarea>
-                        ${optionsHTML}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Manipulasi Data Soal Manual
-        function addQuestion(type) {
-            const newId = Date.now();
-            const newSoal = {
-                id: newId,
-                type: type,
-                question: '',
-                options: type === 'pg' ? ['', '', '', ''] : [],
-                answer: type === 'pg' ? 'A' : ''
-            };
-            appState.questions.push(newSoal);
-            renderEditorList();
-            renderPreview();
-            showToast('Butir soal baru ditambahkan');
-        }
-
-        function updateQuestion(id, field, value) {
-            const soal = appState.questions.find(q => q.id === id);
-            if (soal) {
-                soal[field] = value;
-                renderPreview();
-            }
-        }
-
-        function updateOption(id, optIdx, value) {
-            const soal = appState.questions.find(q => q.id === id);
-            if (soal && soal.options) {
-                soal.options[optIdx] = value;
-                renderPreview();
-            }
-        }
-
-        function deleteQuestion(id) {
-            appState.questions = appState.questions.filter(q => q.id !== id);
-            renderEditorList();
-            renderPreview();
-        }
-
-        function moveQuestion(index, direction) {
-            const newIndex = index + direction;
-            if (newIndex < 0 || newIndex >= appState.questions.length) return;
-            const temp = appState.questions[index];
-            appState.questions[index] = appState.questions[newIndex];
-            appState.questions[newIndex] = temp;
-            renderEditorList();
-            renderPreview();
-        }
-
-        function clearAllQuestions() {
-            appState.questions = [];
-            renderEditorList();
-            renderPreview();
-            showToast('Semua soal telah dikosongkan');
-        }
-
-        // INTEGRASI GEMINI API UNTUK GENERATE SOAL OTOMATIS
-        async function generateSoalWithAI() {
-            const kelas = document.getElementById('aiKelas').value;
-            const mapel = document.getElementById('aiMapel').value;
-            const materi = document.getElementById('aiMateri').value.trim();
-            const jmlPG = parseInt(document.getElementById('aiJmlPG').value) || 0;
-            const jmlIsian = parseInt(document.getElementById('aiJmlIsian').value) || 0;
-            const jmlUraian = parseInt(document.getElementById('aiJmlUraian').value) || 0;
-            const opsiCount = parseInt(document.getElementById('aiOpsiCount').value) || 4;
-            const level = document.getElementById('aiLevel').value;
-
-            if (!materi) {
-                showToast('Mohon isi topik atau materi pelajaran terlebih dahulu!', '⚠️');
-                return;
-            }
-            if (jmlPG + jmlIsian + jmlUraian === 0) {
-                showToast('Jumlah soal minimal 1 butir!', '⚠️');
-                return;
-            }
-
-            const btn = document.getElementById('btnGenerateAI');
-            const loading = document.getElementById('aiLoading');
-            btn.disabled = true;
-            btn.classList.add('opacity-50', 'cursor-not-allowed');
-            loading.classList.remove('hidden');
-
-            const systemPrompt = `Anda adalah Guru Sekolah Dasar (SD) profesional di Indonesia yang ahli menyusun naskah asesmen Kurikulum Merdeka. 
-Buatkan soal evaluasi untuk siswa SD dengan bahasa Indonesia yang baku, komunikatif, santun, dan sesuai tingkat perkembangan kognitif usia siswa SD.
-Aturan penulisan soal SD:
-- Untuk soal rumpang/melengkapi kalimat, akhiri dengan 4 titik (....).
-- Pilihan jawaban ditulis dengan huruf kecil di awal kecuali nama orang/tempat/singkatan.
-- Pastikan hanya ada satu jawaban yang paling benar untuk pilihan ganda.`;
-
-            const userQuery = `Buatkan naskah soal SD dengan rincian berikut:
-- Kelas: ${kelas}
-- Mata Pelajaran: ${mapel}
-- Topik / Materi: ${materi}
-- Tingkat Kesulitan: ${level}
-- Jumlah Pilihan Ganda: ${jmlPG} soal (masing-masing ${opsiCount} pilihan jawaban: ${opsiCount === 3 ? 'A, B, C' : 'A, B, C, D'})
-- Jumlah Isian Singkat: ${jmlIsian} soal
-- Jumlah Uraian: ${jmlUraian} soal`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] },
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "ARRAY",
-                        description: "Daftar butir soal ujian sekolah dasar",
-                        items: {
-                            type: "OBJECT",
-                            properties: {
-                                type: {
-                                    type: "STRING",
-                                    enum: ["pg", "isian", "uraian"],
-                                    description: "Jenis soal: pg untuk pilihan ganda, isian untuk isian singkat, uraian untuk esai"
-                                },
-                                question: {
-                                    type: "STRING",
-                                    description: "Teks pertanyaan soal"
-                                },
-                                options: {
-                                    type: "ARRAY",
-                                    items: { type: "STRING" },
-                                    description: "Array berisi teks pilihan jawaban (kosongkan jika bukan pilihan ganda)"
-                                },
-                                answer: {
-                                    type: "STRING",
-                                    description: "Untuk pg isi huruf kapital saja (A, B, C, atau D). Untuk isian/uraian isi teks kunci jawaban."
-                                }
-                            },
-                            required: ["type", "question", "options", "answer"]
-                        }
-                    }
-                }
-            };
-
-            const apiKey = "";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-            try {
-                const response = await fetchWithRetry(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-                const rawText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                if (rawText) {
-                    const generatedQuestions = JSON.parse(rawText);
-                    appState.questions = generatedQuestions.map((item, idx) => ({
-                        id: Date.now() + idx,
-                        type: item.type,
-                        question: item.question,
-                        options: item.options || [],
-                        answer: item.answer
-                    }));
-
-                    syncIdentitasFromAI();
-                    renderEditorList();
-                    renderPreview();
-                    showToast(`Berhasil membuat ${appState.questions.length} soal baru!`, '✨');
-                } else {
-                    throw new Error('Respons AI kosong');
-                }
-            } catch (error) {
-                showToast('Gagal menghubungi layanan AI. Silakan coba lagi.', '❌');
-            } finally {
-                btn.disabled = false;
-                btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                loading.classList.add('hidden');
-            }
-        }
-
-        // Helper Exponential Backoff Fetch
-        async function fetchWithRetry(url, options, maxRetries = 4) {
-            let delay = 1000;
-            for (let i = 0; i < maxRetries; i++) {
-                try {
-                    const res = await fetch(url, options);
-                    if (res.ok) return res;
-                    if (res.status !== 429 && res.status < 500) return res;
-                } catch (err) {
-                    if (i === maxRetries - 1) throw err;
-                }
-                await new Promise(resolve => setTimeout(resolve, delay));
-                delay *= 2;
-            }
-            throw new Error('Max retries reached');
-        }
-
-        // Penyimpanan Lokal Browser (LocalStorage)
-        function saveToLocal() {
-            const dataToSave = {
-                kopPemda: document.getElementById('kopPemda').value,
-                kopDinas: document.getElementById('kopDinas').value,
-                kopSekolah: document.getElementById('kopSekolah').value,
-                kopAlamat: document.getElementById('kopAlamat').value,
-                judulUjian: document.getElementById('judulUjian').value,
-                tahunAjaran: document.getElementById('tahunAjaran').value,
-                waktuUjian: document.getElementById('waktuUjian').value,
-                idMapel: document.getElementById('idMapel').value,
-                idKelas: document.getElementById('idKelas').value,
-                hariTanggal: document.getElementById('hariTanggal').value,
-                appState: appState
-            };
-            try {
-                localStorage.setItem('generator_soal_sd_v1', JSON.stringify(dataToSave));
-                showToast('Kop sekolah & daftar soal berhasil disimpan di browser!');
-            } catch (e) {
-                showToast('Gagal menyimpan (ukuran logo terlalu besar)', '⚠️');
-            }
-        }
-
-        function loadFromLocal() {
-            try {
-                const saved = localStorage.getItem('generator_soal_sd_v1');
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    if (data.kopPemda) document.getElementById('kopPemda').value = data.kopPemda;
-                    if (data.kopDinas) document.getElementById('kopDinas').value = data.kopDinas;
-                    if (data.kopSekolah) document.getElementById('kopSekolah').value = data.kopSekolah;
-                    if (data.kopAlamat) document.getElementById('kopAlamat').value = data.kopAlamat;
-                    if (data.judulUjian) document.getElementById('judulUjian').value = data.judulUjian;
-                    if (data.tahunAjaran) document.getElementById('tahunAjaran').value = data.tahunAjaran;
-                    if (data.waktuUjian) document.getElementById('waktuUjian').value = data.waktuUjian;
-                    if (data.idMapel) document.getElementById('idMapel').value = data.idMapel;
-                    if (data.idKelas) document.getElementById('idKelas').value = data.idKelas;
-                    if (data.hariTanggal) document.getElementById('hariTanggal').value = data.hariTanggal;
-                    if (data.appState) appState = data.appState;
-                }
-            } catch (e) {
-                // Abaikan jika gagal memuat
-            }
-        }
-
-        // Utilitas Keamanan Teks & Toast
-        function escapeHTML(str) {
-            if (!str) return '';
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        }
-
-        function escapeAttr(str) {
-            if (!str) return '';
-            return String(str).replace(/"/g, '&quot;');
-        }
-
-        let toastTimeout;
-        function showToast(msg, icon = '✅') {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMessage').innerText = msg;
-            document.getElementById('toastIcon').innerText = icon;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
-        }
-    </script>
+    <section class="main-card">
+      <h2 class="welcome-heading">Selamat Datang, Bapak/Ibu Guru Hebat!</h2>
+      <p class="welcome-desc">
+        Laman ini disediakan sebagai pusat layanan pembuatan naskah asesmen (<strong>Ulangan Harian, STS, dan SAS</strong>) lengkap dengan <strong>Kop Sekolah resmi</strong> dan format siap cetak ukuran kertas <strong>A4</strong>.
+      </p>
+
+      <div class="guide-box">
+        <h3 class="guide-title">📋 Alur Penggunaan:</h3>
+        <ol class="guide-list">
+          <li>
+            <span class="step-badge">1</span>
+            <span>Buka aplikasi <strong>Generator Soal SD</strong> pada panel di bawah ini.</span>
+          </li>
+          <li>
+            <span class="step-badge">2</span>
+            <span>Atur <strong>Kop Sekolah &amp; Identitas Ujian</strong>, lalu susun soal secara manual atau otomatis.</span>
+          </li>
+          <li>
+            <span class="step-badge">3</span>
+            <span>Klik <strong>Simpan ke Drive</strong> untuk mengarsipkan hasil soal ke folder bersama sekolah.</span>
+          </li>
+        </ol>
+      </div>
+
+      <div class="quick-actions">
+        <a
+          class="btn-action btn-drive"
+          href="https://drive.google.com/drive/folders/15_632ii4jIHE6PwBDauwgdJDM42J7Dbi?usp=drive_link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span>📂</span>
+          <span>Buka Folder Arsip Bank Soal (Google Drive)</span>
+        </a>
+
+        <a
+          class="btn-action btn-app"
+          href="https://gemini.google.com/share/093c04c76c6e?social_preview=true&skid=6ea45a68-8724-4081-b456-ef72390bdaf0"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span>🌐</span>
+          <span>Buka Aplikasi Generator Soal (Layar Penuh)</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    2026 | Generator Soal | SD Negeri Kapuk 01
+  </footer>
+
+  <script>
+    function handleLogoFallback(imgEl) {
+      const stage = Number(imgEl.dataset.fallbackStage || 0);
+      if (stage === 0 && imgEl.dataset.fallback1) {
+        imgEl.dataset.fallbackStage = "1";
+        imgEl.src = imgEl.dataset.fallback1;
+      } else if (stage === 1 && imgEl.dataset.fallback2) {
+        imgEl.dataset.fallbackStage = "2";
+        imgEl.src = imgEl.dataset.fallback2;
+      } else {
+        imgEl.style.display = "none";
+      }
+    }
+  </script>
 </body>
 </html>
